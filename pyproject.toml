@@ -1,0 +1,9 @@
+[project]
+name = "cognitive-orchestrator"
+version = "1.0.0"
+description = "Enterprise Cognitive Orchestrator — AI Assistant Decision Engine"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["orchestrator/tests"]
