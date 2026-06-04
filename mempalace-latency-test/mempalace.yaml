@@ -1,0 +1,5 @@
+wing: mempalace_latency_test
+rooms:
+- name: general
+  description: All project files
+  keywords: []
