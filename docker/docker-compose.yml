@@ -1,0 +1,55 @@
+services:
+
+  # ── Application ─────────────────────────────────────────────────────────────
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: llm_feedback_service
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - LLM_MODEL=${LLM_MODEL:-gemini/gemini-2.0-flash}
+      - LLM_TEMPERATURE=${LLM_TEMPERATURE:-0.2}
+      - LLM_MAX_TOKENS=${LLM_MAX_TOKENS:-2048}
+      - MONGODB_URI=mongodb://mongo:27017
+      - MONGODB_DB_NAME=${MONGODB_DB_NAME:-rag_service}
+      - APP_ENV=development
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8000
+      - LOG_LEVEL=INFO
+      - CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD:-0.6}
+      - CITATION_COVERAGE_THRESHOLD=${CITATION_COVERAGE_THRESHOLD:-0.5}
+      - RELEVANCE_THRESHOLD=${RELEVANCE_THRESHOLD:-0.5}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - rag_network
+
+  # ── MongoDB ──────────────────────────────────────────────────────────────────
+  mongo:
+    image: mongo:6.0
+    container_name: llm_feedback_mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - rag_network
+
+volumes:
+  mongo_data:
+
+networks:
+  rag_network:
+    driver: bridge

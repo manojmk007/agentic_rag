@@ -1,0 +1,26 @@
+services:
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: llm_feedback_service
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - LLM_MODEL=${LLM_MODEL:-gemini/gemini-2.0-flash}
+      - LLM_TEMPERATURE=${LLM_TEMPERATURE:-0.2}
+      - LLM_MAX_TOKENS=${LLM_MAX_TOKENS:-2048}
+      - MONGODB_URI=mongodb://host.docker.internal:27017
+      - MONGODB_DB_NAME=${MONGODB_DB_NAME:-rag_service}
+      - APP_ENV=development
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8000
+      - LOG_LEVEL=INFO
+      - CONFIDENCE_THRESHOLD=0.6
+      - CITATION_COVERAGE_THRESHOLD=0.5
+      - RELEVANCE_THRESHOLD=0.5
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

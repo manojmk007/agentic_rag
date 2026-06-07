@@ -1,0 +1,38 @@
+# Virtual environment
+venv/
+.venv/
+
+# Secrets
+.env
+*.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+
+# Tests (not needed in production image)
+tests/
+pytest_cache/
+.coverage
+htmlcov/
+
+# Development files
+*.md
+.git/
+.gitignore
+scripts/
+docker/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
