@@ -11,12 +11,31 @@ from app.utils.id_generator import generate_response_id
 from app.utils.logger import get_logger
 from app.utils.exceptions import LLMServiceError
 from datetime import datetime, timezone
+import os
+import litellm
+from app.config import get_settings
+import logging
+
+litellm.set_verbose = True
 
 logger = get_logger(__name__)
 settings = get_settings()
 
 # Tell LiteLLM where to find the Gemini key
+#os.environ["GEMINI_API_KEY"] = settings.gemini_api_key
+
+settings = get_settings()
+
+# Set both ways LiteLLM checks for the key
 os.environ["GEMINI_API_KEY"] = settings.gemini_api_key
+litellm.api_key = settings.gemini_api_key
+
+# Debug line — remove after confirming it works
+
+logging.info(f"Gemini key loaded: {settings.gemini_api_key[:8]}... length={len(settings.gemini_api_key)} starts_with_AIza={settings.gemini_api_key.startswith('AIza')}")
+
+print("ENV GEMINI:", os.environ.get("GEMINI_API_KEY")[:10])
+print("ENV GOOGLE:", os.environ.get("GOOGLE_API_KEY"))
 
 
 def _build_context_block(context: AssembledContext) -> str:

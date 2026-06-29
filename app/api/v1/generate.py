@@ -2,7 +2,6 @@ import time
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
-
 from app.dependencies import get_db
 from app.models.context import AssembledContext
 from app.models.response import FormattedResponse
